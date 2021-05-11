@@ -218,7 +218,7 @@
                     <a href="withdraw"><i class="fa fa-fw fa fa-question-circle"></i> Withdraw</a>
                 </li>
                 <li>
-                    <a href="faq"><i class="fa fa-fw fa fa-question-circle"></i> Deposit</a>
+                    <a href="deposit"><i class="fa fa-fw fa fa-question-circle"></i> Deposit</a>
                 </li>
                 <li>
                     <a href="fundtransfer"><i class="fa fa-fw fa fa-question-circle"></i> Fund Transfer</a>

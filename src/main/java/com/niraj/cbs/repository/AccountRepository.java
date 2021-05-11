@@ -6,7 +6,10 @@
 package com.niraj.cbs.repository;
 
 import com.niraj.cbs.entity.Account;
+import java.util.ArrayList;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -16,4 +19,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AccountRepository extends CrudRepository<Account,Integer>{
     
+    //@Query("SELECT * FROM account WHERE account.name LIKE %:name%")
+    public ArrayList<Account> findAllByName(String name);
 }

@@ -1,12 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="com.niraj.cbs.entity.Account"%>
-<%@ page import="java.util.ArrayList"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>  
+
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Core Banking System : List All Accounts</title>
+    <title>Core Banking System : DashBoard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -240,33 +240,14 @@
             <!-- Page Heading -->
             <div class="row" id="main" >
                 <div class="col-sm-12 col-md-12 well" id="content">
-                    <!-- your content  to be displayed.. -->
-                    <div class="row">
-                        List of all accounts in the system.
-                    </div>
-                    <table class="table-striped table">
-                        <tr>
-                            <td>Acc No</td>
-                            <td>Account Name</td>
-                            <td>Address</td>
-                            <td>Amount</td>
-                            <td>Acc Type</td>
-                        </tr>
-                        <%
-                            ArrayList<Account> accLists=(ArrayList<Account>)request.getAttribute("accList");
-                            for(Account a: accLists){ %>
-                                <tr>
-                                    <td><%out.print(a.getAccNo());%></td>
-                                    <td><%out.print(a.getName());%></td>
-                                    <td><%out.print(a.getAddress());%></td>
-                                    <td><%out.print(a.getAmount());%></td>
-                                    <td><%out.print(a.getAccType());%></td>
-                                </tr>
-                                <%
-                            }
-                        %>
-                        
-                    </table>
+                    <form:form modelAttribute="deposit" action="depositProcess" method="POST">
+                    <h1>Deposit</h1>
+                    <p> Please enter your account number and amount to deposit.</p> 
+                    <form:input type="text" path="accNo" name="accNo" placeholder="Account Number"/> 
+                    <form:input type="text" path="amount" name="amount" placeholder="Amount"/> 
+                    <button type="submit">Deposit</button>
+                    
+                </form:form>
                 </div>
             </div>
             <!-- /.row -->
