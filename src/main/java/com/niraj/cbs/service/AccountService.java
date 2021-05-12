@@ -18,6 +18,7 @@ public interface AccountService {
     public Optional<Account> findByAccNo(int accNo);
     public ArrayList<Account> listAllAccounts();
     public Account deposit(int accNo, float amount);
-    public int withdraw(int accNo, float amount);
+    public Account withdraw(int accNo, float amount);
+    public boolean deleteAccount(int accNo);
     public int fundTransfer(int srcAccNo, int trgtAccNo, float amount);
 }

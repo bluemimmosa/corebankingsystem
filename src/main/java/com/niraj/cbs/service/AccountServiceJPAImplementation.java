@@ -8,6 +8,7 @@ package com.niraj.cbs.service;
 import com.niraj.cbs.entity.Account;
 import com.niraj.cbs.repository.AccountRepository;
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.function.Consumer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,17 @@ public class AccountServiceJPAImplementation implements AccountService {
     
     @Override
     public Account createNewAccount(Account a) {
-       return ar.save(a);
+       Optional<Account> accResponse = findByAccNo(a.getAccNo());
+       Account x;
+       try{
+           x = accResponse.get();
+       }catch(NoSuchElementException e){
+           x = null;
+       }
+       if(x == null){
+           return ar.save(a);
+       }
+       return null;
     }
 
     @Override
@@ -43,8 +54,15 @@ public class AccountServiceJPAImplementation implements AccountService {
     }
 
     @Override
-    public int withdraw(int accNo, float amount) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Account withdraw(int accNo, float amount) {
+        Optional<Account> accResponse = findByAccNo(accNo);
+        Account a = accResponse.get();
+        //System.out.println(a);
+        if(a.getAmount()<amount){
+            return null;
+        }
+        a.setAmount(a.getAmount()-amount);
+        return ar.save(a);
     }
 
     @Override
@@ -55,6 +73,12 @@ public class AccountServiceJPAImplementation implements AccountService {
     @Override
     public Optional<Account> findByAccNo(int accNo) {
         return ar.findById(accNo);
+    }
+
+    @Override
+    public boolean deleteAccount(int accNo) {
+        ar.deleteById(accNo);
+        return !ar.existsById(accNo);
     }
     
 }
