@@ -10,7 +10,6 @@ import com.niraj.cbs.repository.AccountRepository;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.function.Consumer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,17 +24,31 @@ public class AccountServiceJPAImplementation implements AccountService {
     
     @Override
     public Account createNewAccount(Account a) {
-       Optional<Account> accResponse = findByAccNo(a.getAccNo());
-       Account x;
-       try{
-           x = accResponse.get();
-       }catch(NoSuchElementException e){
-           x = null;
-       }
-       if(x == null){
-           return ar.save(a);
-       }
-       return null;
+        Account acc;
+        
+        try{
+            Optional<Account> accResponse = ar.findById(a.getAccNo());
+            if(accResponse.isPresent()){
+                return null;
+            }
+            else{
+                return ar.save(a);
+            }
+        }catch(NoSuchElementException ex){
+            //System.out.println("NoSuchElementException triggered..");
+            System.out.println(ex);
+        }
+        
+        return null;
+        
+//       Optional<Account> accResponse = findByAccNo(a.getAccNo());
+//       Account x;
+//       try{
+//           x = accResponse.get();
+//       }catch(NoSuchElementException e){
+//           x = null;
+//       }
+       
     }
 
     @Override
@@ -47,22 +60,29 @@ public class AccountServiceJPAImplementation implements AccountService {
     public Account deposit(int accNo, float amount) {
         
         Optional<Account> accResponse = findByAccNo(accNo);
-        Account a = accResponse.get();
-        //System.out.println(a);
-        a.setAmount(a.getAmount()+amount);
-        return ar.save(a);
+        if(accResponse.isPresent()){
+            Account a = accResponse.get();
+            //System.out.println(a);
+            a.setAmount(a.getAmount()+amount);
+            return ar.save(a);
+        }
+        return null;
     }
 
     @Override
     public Account withdraw(int accNo, float amount) {
         Optional<Account> accResponse = findByAccNo(accNo);
-        Account a = accResponse.get();
-        //System.out.println(a);
-        if(a.getAmount()<amount){
-            return null;
+        if(accResponse.isPresent()){
+            Account a = accResponse.get();
+            //System.out.println(a);
+            if(a.getAmount()<amount){
+                return null;
+            }
+            a.setAmount(a.getAmount()-amount);
+            return ar.save(a);
         }
-        a.setAmount(a.getAmount()-amount);
-        return ar.save(a);
+        return null;
+        
     }
 
     @Override
@@ -79,6 +99,11 @@ public class AccountServiceJPAImplementation implements AccountService {
     public boolean deleteAccount(int accNo) {
         ar.deleteById(accNo);
         return !ar.existsById(accNo);
+    }
+
+    @Override
+    public ArrayList<Account> findByName(String name) {
+        return ar.findAllByName(name);
     }
     
 }

@@ -6,15 +6,16 @@
 package com.niraj.cbs.controller;
 
 import com.niraj.cbs.entity.Account;
-import com.niraj.cbs.entity.User;
 import com.niraj.cbs.service.AccountService;
 import java.util.ArrayList;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -38,6 +39,7 @@ public class AccountController {
         mav.addObject("accList", accList);
         return mav;
     }
+    
     
     
     @GetMapping("/createnewaccount")
@@ -117,4 +119,52 @@ public class AccountController {
             mav.addObject("message", "Deposit successful!!");
         return mav;
     }
+    
+    @GetMapping("/searchbyname")
+    public ModelAndView showSearchForm(HttpSession session){
+        
+        if(session.getAttribute("username") == null){
+            ModelAndView mav = new ModelAndView("dashboard");
+            mav.addObject("message", "Login is required to do that.");
+            return mav;
+        }
+        ModelAndView mav = new ModelAndView("searchbynameForm");
+        mav.addObject("accList", new ArrayList<Account>());
+        
+        mav.addObject("search", new Account());
+        return mav;
+    }
+    
+    @PostMapping("/searchProcess")
+    public ModelAndView searchProcess(@ModelAttribute ("search") Account acc, HttpSession session){
+        if(session.getAttribute("username") == null){
+            ModelAndView mav = new ModelAndView("dashboard");
+            mav.addObject("message", "Login is required to do that.");
+            return mav;
+        }
+        ModelAndView mav = new ModelAndView("searchbynameForm");
+        mav.addObject("accList", as.findByName(acc.getName()));
+        return mav;
+    }
+    
+    @GetMapping("/delete")
+    public ModelAndView deleteAccount(@RequestParam int accNo, HttpSession session){
+        if(session.getAttribute("username") == null){
+            ModelAndView mav = new ModelAndView("dashboard");
+            mav.addObject("message", "Login is required to do that.");
+            return mav;
+        }
+        if(as.deleteAccount(accNo)){
+            ModelAndView mav = new ModelAndView("searchbynameForm");
+            mav.addObject("accList", new ArrayList<>());
+            mav.addObject("search", new Account());
+            return mav;
+        }
+        else{
+            ModelAndView mav = new ModelAndView("dashboard");
+            mav.addObject("message", "Cannot Delete The Account.");
+            return mav;
+        }
+    }
+    
 }

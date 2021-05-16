@@ -21,4 +21,5 @@ public interface AccountService {
     public Account withdraw(int accNo, float amount);
     public boolean deleteAccount(int accNo);
     public int fundTransfer(int srcAccNo, int trgtAccNo, float amount);
+    public ArrayList<Account> findByName(String name);
 }
